@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class PlayerMover : MonoBehaviour
 {
+    public float moveSpeed = 5f;
+
+    [SerializeField] private RandomDirectionManager _randomDirectionManager;
 
     private bool _isHolding = false;
     private bool _wasHolding = false;
-    [SerializeField]private float _moveSpeed = 5f;
+    private SpeedBoostController _speedBoostController;
 
-    [SerializeField] private RandomDirectionManager _randomDirectionManager;
+
+    private void Start()
+    {
+        _speedBoostController= GetComponent<SpeedBoostController>();
+    }
 
 
     private void Update()
@@ -31,12 +38,14 @@ public class PlayerMover : MonoBehaviour
         if (_isHolding)
         {
             Move();
+            _speedBoostController.UpdatePlayerSpeed();
         }
 
         if (!_isHolding && _wasHolding)
         {
             Debug.Log("Basýlý tutma bitti");
             _randomDirectionManager.UpdateDirections();
+            _speedBoostController.ResetPlayerSpeed();
         }
 
         _wasHolding = _isHolding;
@@ -50,7 +59,7 @@ public class PlayerMover : MonoBehaviour
         }
         Vector3 currentDirection=_randomDirectionManager.GetCurrentDirection();
 
-        transform.position += currentDirection * _moveSpeed * Time.deltaTime;
+        transform.position += currentDirection * moveSpeed * Time.deltaTime;
 
 
     }
