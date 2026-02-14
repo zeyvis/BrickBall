@@ -13,7 +13,7 @@ public class PlatformGenerator : MonoBehaviour
 
     private readonly float[] _possibleYRotations = { 0f, 90f, 180f, 270f };
 
-    private void Start()
+    private void Awake()
     {
         if (_cubePrefabs == null || _cubePrefabs.Length == 0)
         {

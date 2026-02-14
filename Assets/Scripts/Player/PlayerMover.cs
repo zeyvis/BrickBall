@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class PlayerMover : MonoBehaviour
 {
+    //movement
     public float moveSpeed = 5f;
-
-    [SerializeField] private RandomDirectionManager _randomDirectionManager;
-
+    private float _ballRadius;
+    
+    //input states
     private bool _isHolding = false;
     private bool _wasHolding = false;
+
+    // References
+    [SerializeField] private RandomDirectionManager _randomDirectionManager;
     private SpeedBoostController _speedBoostController;
-
-
     private void Start()
     {
         _speedBoostController= GetComponent<SpeedBoostController>();
+        _ballRadius = transform.localScale.x / 2f;
     }
 
 
@@ -61,7 +64,16 @@ public class PlayerMover : MonoBehaviour
 
         transform.position += currentDirection * moveSpeed * Time.deltaTime;
 
+        RotateBall(currentDirection);
+    }
+    private void RotateBall(Vector3 direction)
+    {
+        //radyandanda dereceye döndürüp dönem hýzýný hýzla ve yarýçapla orantýlýyan formül
+        float angle = (moveSpeed / _ballRadius) * Mathf.Rad2Deg * Time.deltaTime;
 
+        Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);
+
+        transform.Rotate(rotationAxis, angle, Space.World);
     }
 }
 
