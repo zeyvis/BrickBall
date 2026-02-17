@@ -6,9 +6,7 @@ public class DropPhase : IGamePhase
     private Transform _container;
     private float _timer;
     private float _selectionInterval = 0.5f;
-
     private float _timeActive = 0f;
-
     private float _spawnDurationLimit = 4.0f;
 
     private List<FallingCube> _activeCubes = new List<FallingCube>();
@@ -20,15 +18,13 @@ public class DropPhase : IGamePhase
 
     public void Enter()
     {
-        Debug.Log("DropPhase Start");
         _activeCubes.Clear();
-        _timeActive = 0f; 
+        _timeActive = 0f;
     }
 
     public void Update()
     {
         if (_container == null) return;
-
 
         _timeActive += Time.deltaTime;
 
@@ -41,19 +37,10 @@ public class DropPhase : IGamePhase
                 _timer = 0;
             }
         }
-
     }
 
     public void Exit()
     {
-        for (int i = _activeCubes.Count - 1; i >= 0; i--)
-        {
-            FallingCube cube = _activeCubes[i];
-            if (cube != null)
-            {
-                cube.ResetBlock();
-            }
-        }
         _activeCubes.Clear();
     }
 

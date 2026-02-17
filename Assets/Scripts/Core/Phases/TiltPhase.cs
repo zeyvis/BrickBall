@@ -1,4 +1,4 @@
-﻿using System.Collections; // IEnumerator için gerekli
+﻿using System.Collections; 
 using UnityEngine;
 
 public class TiltPhase : IGamePhase

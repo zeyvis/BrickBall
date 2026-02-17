@@ -5,22 +5,14 @@ public class FallingCube : MonoBehaviour
 {
     private bool _isFalling = false;
     private float _fallSpeed = 8.0f;
+    private float _destroyDelay = 3.0f;
 
-    // hafýza deðþþkenleri
-    private Vector3 _startPosition;
-    private Quaternion _startRotation;
-    private Transform _originalParent;
     private Color _originalColor;
     private Renderer _renderer;
 
     private void Start()
     {
         _renderer = GetComponent<Renderer>();
-
-
-        _originalParent = transform.parent;        
-        _startPosition = transform.localPosition;  
-        _startRotation = transform.localRotation;  
 
         if (_renderer != null)
         {
@@ -34,15 +26,12 @@ public class FallingCube : MonoBehaviour
     {
         if (_isFalling)
         {
-
             transform.Translate(Vector3.down * _fallSpeed * Time.deltaTime, Space.World);
-
         }
     }
 
     private IEnumerator WarningAndFall()
     {
-
         float duration = 2.0f;
         float timer = 0f;
 
@@ -58,31 +47,11 @@ public class FallingCube : MonoBehaviour
             yield return null;
         }
 
-        if (_renderer != null) _renderer.material.color = Color.red; 
+        if (_renderer != null) _renderer.material.color = Color.red;
 
         transform.SetParent(null);
-
         _isFalling = true;
-    }
 
-
-    public void ResetBlock()
-    {
-
-        StopAllCoroutines();
-        _isFalling = false;
-
-
-        transform.SetParent(_originalParent);
-
-        transform.localPosition = _startPosition;
-        transform.localRotation = _startRotation;
-
-        if (_renderer != null)
-        {
-            _renderer.material.color = _originalColor;
-        }
-
-        Destroy(this);
+        Destroy(gameObject, _destroyDelay);
     }
 }

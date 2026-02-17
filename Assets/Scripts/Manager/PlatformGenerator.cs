@@ -6,12 +6,9 @@ public class PlatformGenerator : MonoBehaviour
     [SerializeField] private int _gridSize = 10;
     [SerializeField] private float _cubeSize = 3f;
 
-    [Header("prefab and Rotation Settings")]
+    [Header("Prefab Settings")]
     [SerializeField] private GameObject[] _cubePrefabs;
-
     [SerializeField] private float _fixedXRotation = -90f;
-
-    private readonly float[] _possibleYRotations = { 0f, 90f, 180f, 270f };
 
     private void Awake()
     {
@@ -33,7 +30,6 @@ public class PlatformGenerator : MonoBehaviour
 
         for (int x = 0; x < _gridSize; x++)
         {
-            //pozisyon hesapla
             for (int z = 0; z < _gridSize; z++)
             {
                 Vector3 spawnPosition = new Vector3(
@@ -42,13 +38,10 @@ public class PlatformGenerator : MonoBehaviour
                     (z * _cubeSize) - offset
                 );
 
-
                 int randomPrefabIndex = Random.Range(0, _cubePrefabs.Length);
                 GameObject selectedPrefab = _cubePrefabs[randomPrefabIndex];
 
-                int randomYIndex = Random.Range(0, _possibleYRotations.Length);
-                float selectedYAngle = _possibleYRotations[randomYIndex];
-                Quaternion currentRotation = Quaternion.Euler(_fixedXRotation, selectedYAngle, 0);
+                Quaternion currentRotation = Quaternion.Euler(_fixedXRotation, 0f, 0f);
 
                 GameObject newCube = Instantiate(selectedPrefab, spawnPosition, currentRotation);
                 newCube.transform.SetParent(container.transform);
