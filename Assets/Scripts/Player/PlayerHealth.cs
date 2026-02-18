@@ -4,8 +4,18 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour,IKillable
 {
+    private SpeedBoostController _speedBoostController;
+    private void Start()
+    {
+        _speedBoostController = GetComponent<SpeedBoostController>();
+    }
     public void Kill()
     {
-        Debug.Log("Player died");
+        if (!_speedBoostController.playerBeastMode)
+            Debug.Log("Player died");
+        else
+            Debug.Log("player not died because player in the beast mode");
     }
+
+  
 }

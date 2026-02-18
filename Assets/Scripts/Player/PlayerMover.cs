@@ -68,7 +68,7 @@ public class PlayerMover : MonoBehaviour
     }
     private void RotateBall(Vector3 direction)
     {
-        //radyandanda dereceye döndürüp dönem hýzýný hýzla ve yarýçapla orantýlýyan formül
+
         float angle = (moveSpeed / _ballRadius) * Mathf.Rad2Deg * Time.deltaTime;
 
         Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);

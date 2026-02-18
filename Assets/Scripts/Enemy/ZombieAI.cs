@@ -26,7 +26,11 @@ public class ZombieAI : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<IKillable>(out var killable))
+        {
+            
             killable.Kill();
+        }
+            
     }
 
     private void FindPlayerLocation()

@@ -18,6 +18,8 @@ public class SpeedBoostController : MonoBehaviour
     private TrailRenderer _trail;
     private PlayerMover _playerMover;
     private float _baseSpeed;
+    private bool _beastMode = false;
+    public bool playerBeastMode=> _beastMode;
 
     private void Start()
     {
@@ -33,12 +35,14 @@ public class SpeedBoostController : MonoBehaviour
         float calculatedSpeed = _playerMover.moveSpeed + _speedMutltipler;
         _playerMover.moveSpeed = calculatedSpeed;
         UpdateTrailColor();
+        UpdatePlayerMode();
     }
 
     public void ResetPlayerSpeed()
     {
         _playerMover.moveSpeed = _baseSpeed;
         UpdateTrailColor();
+        UpdatePlayerMode();
     }
 
     private void UpdateTrailColor()
@@ -47,7 +51,7 @@ public class SpeedBoostController : MonoBehaviour
 
         float currentSpeed = _playerMover.moveSpeed;
 
-        //sarý baþlangýcýndan küçükse kapat
+
         if (currentSpeed < _speedLimitStart)
         {
             _trail.emitting = false;
@@ -75,5 +79,15 @@ public class SpeedBoostController : MonoBehaviour
 
         _trail.startColor = targetColor;
         _trail.endColor = new Color(targetColor.r, targetColor.g, targetColor.b, 0f);
+    }
+
+    private void UpdatePlayerMode()
+    {
+        float currentSpeed = _playerMover.moveSpeed;
+        if(currentSpeed>_speedLimitRed)
+            _beastMode= true;
+        else
+            _beastMode= false;
+        
     }
 }
