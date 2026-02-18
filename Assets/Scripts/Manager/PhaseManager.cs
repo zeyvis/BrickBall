@@ -6,14 +6,22 @@ public class PhaseManager : MonoBehaviour
     private IGamePhase _currentPhase;
     private Transform _targetContainer;
 
+    [SerializeField] private ZombiePool _zombiePool;
     private void Start()
     {
+
+        if (_zombiePool != null)
+            _zombiePool.InitializePool();
+        else
+            Debug.LogError("ZombiePool atanmadý!");
         StartCoroutine(GameLoop());
     }
 
     private void Update()
     {
         if (_currentPhase != null) _currentPhase.Update();
+
+       
     }
 
     private IEnumerator GameLoop()
@@ -45,15 +53,20 @@ public class PhaseManager : MonoBehaviour
 
     private void PickAndStartRandomPhase()
     {
-        if (Random.value > 0.5f)
+        if (Random.value < 0.33f)
         {
             Debug.Log("tilt phase ");
             SwitchPhase(new TiltPhase(_targetContainer, this));
         }
-        else
+        else if(Random.value<0.66f)
         {
             Debug.Log("drop phase ");
             SwitchPhase(new DropPhase(_targetContainer));
+        }
+        else
+        {
+            Debug.Log("zombie phase");
+            SwitchPhase(new ZombiePhase(_zombiePool, _targetContainer));
         }
     }
 
