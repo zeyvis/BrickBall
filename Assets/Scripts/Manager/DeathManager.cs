@@ -55,6 +55,11 @@ public class DeathManager : MonoBehaviour
         if (_scoreManager != null)
             _scoreManager.StopScoreFromManager();
 
+        _scoreManager.SaveBestIfNeeded();
+        int best = _scoreManager.GetBestScore();
+        int current = _scoreManager.CurrentScore;
+
+        _gameOverPanel.SetScores(current, best);
 
         if (_gameOverPanel != null)
             _gameOverPanel.ShowGameOverPanel();

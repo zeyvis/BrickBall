@@ -1,13 +1,16 @@
 using System.Collections;
 using UnityEngine;
-
+using TMPro;
 public class GameOverPanel : MonoBehaviour
 {
     [Header("UI Objects")]
+    [SerializeField] private GameObject _bg;
+    [SerializeField] private GameObject _gameScoreTxt;
+
     [SerializeField] private GameObject _darkOverlay;
     [SerializeField] private GameObject _niceTryImage;
-    [SerializeField] private GameObject _bestTxt;
-    [SerializeField] private GameObject _scoreTxt;
+    [SerializeField] private TextMeshProUGUI _bestTxt;
+    [SerializeField] private TextMeshProUGUI _scoreTxt;
     [SerializeField] private GameObject _retryButton;
     [SerializeField] private GameObject _contiuneButton;
     [Space(5)]
@@ -38,16 +41,16 @@ public class GameOverPanel : MonoBehaviour
     private void Awake()
     {
         _niceTryCg = GetOrAddCanvasGroup(_niceTryImage);
-        _bestCg = GetOrAddCanvasGroup(_bestTxt);
-        _scoreCg = GetOrAddCanvasGroup(_scoreTxt);
+        _bestCg = GetOrAddCanvasGroup(_bestTxt.gameObject);
+        _scoreCg = GetOrAddCanvasGroup(_scoreTxt.gameObject);
         _retryCg = GetOrAddCanvasGroup(_retryButton);
         _continueCg = GetOrAddCanvasGroup(_contiuneButton);
 
         // Start hidden by default
         SetActiveSafe(_darkOverlay, false);
         SetAlphaAndActive(_niceTryCg, _niceTryImage, 0f, false);
-        SetAlphaAndActive(_bestCg, _bestTxt, 0f, false);
-        SetAlphaAndActive(_scoreCg, _scoreTxt, 0f, false);
+        SetAlphaAndActive(_bestCg, _bestTxt.gameObject, 0f, false);
+        SetAlphaAndActive(_scoreCg, _scoreTxt.gameObject, 0f, false);
         SetAlphaAndActive(_retryCg, _retryButton, 0f, false);
         SetAlphaAndActive(_continueCg, _contiuneButton, 0f, false);
     }
@@ -78,11 +81,12 @@ public class GameOverPanel : MonoBehaviour
     {
 
         SetActiveSafe(_darkOverlay, true);
-
+        SetActiveSafe(_bg, false);
+        SetActiveSafe(_gameScoreTxt, false);
 
         SetAlphaAndActive(_niceTryCg, _niceTryImage, 0f, true);
-        SetAlphaAndActive(_bestCg, _bestTxt, 0f, true);
-        SetAlphaAndActive(_scoreCg, _scoreTxt, 0f, true);
+        SetAlphaAndActive(_bestCg, _bestTxt.gameObject, 0f, true);
+        SetAlphaAndActive(_scoreCg, _scoreTxt.gameObject, 0f, true);
         SetAlphaAndActive(_retryCg, _retryButton, 0f, true);
         SetAlphaAndActive(_continueCg, _contiuneButton, 0f, true);
 
@@ -177,5 +181,11 @@ public class GameOverPanel : MonoBehaviour
             cg = go.AddComponent<CanvasGroup>();
 
         return cg;
+    }
+
+    public void SetScores(int score, int best)
+    {
+        _bestTxt.SetText($"BEST: {best}");
+        _scoreTxt.SetText($"SCORE: {score}");
     }
 }

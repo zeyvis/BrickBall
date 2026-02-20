@@ -7,7 +7,7 @@ public class ScoreManager : MonoBehaviour
     private bool _playerDied = false;
     private int _score = 0;
     private float _timer = 0f;
-
+    public int CurrentScore => _score;
 
     private void Start()
     {
@@ -37,5 +37,18 @@ public class ScoreManager : MonoBehaviour
     public void StopScoreFromManager()
     {
         _playerDied= true;
+    }
+    public int GetBestScore()
+    {
+        return PlayerPrefs.GetInt("BEST_SCORE", 0);
+    }
+    public void SaveBestIfNeeded()
+    {
+        int best = GetBestScore();
+        if (_score > best)
+        {
+            PlayerPrefs.SetInt("BEST_SCORE", _score);
+            PlayerPrefs.Save();
+        }
     }
 }
