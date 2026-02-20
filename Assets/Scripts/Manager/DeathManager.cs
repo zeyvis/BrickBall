@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class DeathManager : MonoBehaviour
 {
+    [SerializeField] GameOverPanel _gameOverPanel;
     private PlayerHealth _playerHealth;
     private PlayerMover _playerMover;
     private PlayerDeathEffect _playerDeathEffect;
     private ZombieManager _zombieManager;
+    private ScoreManager _scoreManager;
 
     private void Awake()
     {
@@ -18,7 +20,8 @@ public class DeathManager : MonoBehaviour
             _playerDeathEffect = player.GetComponent<PlayerDeathEffect>();
         }
 
-
+        _gameOverPanel=GetComponent<GameOverPanel>();
+        _scoreManager= GetComponent<ScoreManager>();
         _zombieManager = GetComponent<ZombieManager>(); 
     }
 
@@ -48,6 +51,13 @@ public class DeathManager : MonoBehaviour
         if (_playerDeathEffect != null)
             _playerDeathEffect.PlayFromManager();
 
+
+        if (_scoreManager != null)
+            _scoreManager.StopScoreFromManager();
+
+
+        if (_gameOverPanel != null)
+            _gameOverPanel.ShowGameOverPanel();
 
     }
 }
