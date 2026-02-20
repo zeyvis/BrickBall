@@ -1,17 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour,IKillable
 {
-    private SpeedBoostController _speedBoostController;
+    public event Action OnPlayerDied;
 
+    private SpeedBoostController _speedBoostController;    
     private bool _isDead;
 
     private void Start()
     {
         _speedBoostController = GetComponent<SpeedBoostController>();
+        
     }
+    
+
     public void Kill()
     {
         if (!_speedBoostController.playerBeastMode)
@@ -23,18 +28,9 @@ public class PlayerHealth : MonoBehaviour,IKillable
     {
         if (_isDead) return;
         _isDead = true;
-        Debug.Log("player died");
-       
-    }
-    private void DieEffect()
-    {
+
+        OnPlayerDied?.Invoke();
 
     }
-
-
-
-   
-
-   
-
+ 
 }

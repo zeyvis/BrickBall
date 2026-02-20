@@ -11,19 +11,24 @@ public class PlayerMover : MonoBehaviour
     //input states
     private bool _isHolding = false;
     private bool _wasHolding = false;
+    private bool _canMove = true;
 
     // References
     [SerializeField] private RandomDirectionManager _randomDirectionManager;
     private SpeedBoostController _speedBoostController;
+
     private void Start()
     {
         _speedBoostController= GetComponent<SpeedBoostController>();
-        _ballRadius = transform.localScale.x / 2f;
+        
+        _ballRadius = GetComponent<SphereCollider>().bounds.extents.x;
+
     }
 
 
     private void Update()
     {
+        if (!_canMove) return;
         HandleInput();
         CheckHoldState();
     }
@@ -75,5 +80,15 @@ public class PlayerMover : MonoBehaviour
 
         transform.Rotate(rotationAxis, angle, Space.World);
     }
+    public void StopMovementFromManager()
+    {
+        _canMove = false;
+        _isHolding = false;
+        _wasHolding = false;
+
+        if (_speedBoostController != null)
+            _speedBoostController.ResetPlayerSpeed();
+    }
+
 }
 

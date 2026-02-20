@@ -6,9 +6,17 @@ public class ZombieAI : MonoBehaviour
 
     [SerializeField] private float _searchInterval = 0.5f;
     private float _timer;
-
+    private ZombieManager _zombieManager;
+    private ZombieMovement _movement;
+    private Animator _animator;
     public Transform playerCurrentPos => _playerCurrentPos;
 
+    private void Awake()
+    {
+        _zombieManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<ZombieManager>();
+        _movement = GetComponent<ZombieMovement>();
+        _animator= GetComponent<Animator>();
+    }
     private void Update()
     {
         if (_playerCurrentPos != null)
@@ -39,5 +47,29 @@ public class ZombieAI : MonoBehaviour
 
         if (_playerCurrentPos == null)
             Debug.LogWarning("Player dont find");
+    }
+    public void StopZombie()
+    {
+        if (_movement != null)
+        {
+            _movement.enabled = false;
+            _animator.enabled = false;
+        }
+            
+    }
+
+    private void OnEnable()
+    {
+        _zombieManager.RegisterZombie(this);
+        if (_movement != null)
+            _movement.enabled = true;
+
+        if (_animator != null)
+            _animator.enabled = true;
+    }
+
+    private void OnDisable()
+    {
+        _zombieManager.UnregisterZombie(this);
     }
 }
