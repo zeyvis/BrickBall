@@ -54,5 +54,13 @@ public class PlayerDeathEffect : MonoBehaviour
 
         _deathParticle.Play();
     }
+    public void RestorePlayer()
+    {
+        StopAllCoroutines();
+        if (_mat != null)
+        {
+            _mat.color = _startColor;
+        }
+    }
 
 }

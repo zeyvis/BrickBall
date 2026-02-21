@@ -28,5 +28,14 @@ public class ZombieManager : MonoBehaviour
                 zombie.StopZombie();
         }
     }
+    public void ResumeAllZombiesFromManager()
+    {
+        for (int i = _activeZombies.Count - 1; i >= 0; i--)
+        {
+            var zombie = _activeZombies[i];
+            if (zombie != null)
+                zombie.ResumeZombie();
+        }
+    }
 
 }

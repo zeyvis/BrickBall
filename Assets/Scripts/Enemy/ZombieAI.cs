@@ -55,7 +55,16 @@ public class ZombieAI : MonoBehaviour
             _movement.enabled = false;
             _animator.enabled = false;
         }
+
             
+    }
+    public void ResumeZombie()
+    {
+        if (_movement != null)
+        {
+            _movement.enabled = true;
+            _animator.enabled = true;
+        }
     }
 
     private void OnEnable()

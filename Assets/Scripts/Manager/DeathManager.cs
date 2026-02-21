@@ -28,13 +28,34 @@ public class DeathManager : MonoBehaviour
     private void OnEnable()
     {
         if (_playerHealth != null)
+        {
             _playerHealth.OnPlayerDied += HandlePlayerDied;
+            _playerHealth.OnPlayerRevived += HandlePlayerRevived;
+        }
     }
 
     private void OnDisable()
     {
         if (_playerHealth != null)
+        {
             _playerHealth.OnPlayerDied -= HandlePlayerDied;
+            _playerHealth.OnPlayerRevived -= HandlePlayerRevived;
+        }
+    }
+
+    private void HandlePlayerRevived()
+    {
+        if (_playerMover != null)
+            _playerMover.ResumeMovementFromManager();
+
+        if (_zombieManager != null)
+            _zombieManager.ResumeAllZombiesFromManager();
+
+        if (_scoreManager != null)
+            _scoreManager.ResumeScoreFromManager();
+
+        if (_gameOverPanel != null)
+            _gameOverPanel.HideGameOverPanel();
     }
 
     private void HandlePlayerDied()

@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour,IKillable
 {
     public event Action OnPlayerDied;
-
+    public event Action OnPlayerRevived;
     private SpeedBoostController _speedBoostController;    
     private bool _isDead;
 
@@ -32,5 +32,10 @@ public class PlayerHealth : MonoBehaviour,IKillable
         OnPlayerDied?.Invoke();
 
     }
- 
+    public void Revive()
+    {
+        _isDead = false;
+        OnPlayerRevived?.Invoke();
+    }
+
 }

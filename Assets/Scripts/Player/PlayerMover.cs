@@ -89,6 +89,10 @@ public class PlayerMover : MonoBehaviour
         if (_speedBoostController != null)
             _speedBoostController.ResetPlayerSpeed();
     }
+    public void ResumeMovementFromManager()
+    {
+        _canMove = true;
+    }
 
 }
 

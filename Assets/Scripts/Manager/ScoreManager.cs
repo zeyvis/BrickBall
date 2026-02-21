@@ -43,6 +43,10 @@ public class ScoreManager : MonoBehaviour
     {
         _playerDied= true;
     }
+    public void ResumeScoreFromManager()
+    {
+        _playerDied = false;
+    }
     public int GetBestScore()
     {
         return PlayerPrefs.GetInt("BEST_SCORE", 0);

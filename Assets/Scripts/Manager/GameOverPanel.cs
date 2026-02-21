@@ -188,4 +188,19 @@ public class GameOverPanel : MonoBehaviour
         _bestTxt.SetText($"BEST: {best}");
         _scoreTxt.SetText($"SCORE: {score}");
     }
+    public void HideGameOverPanel()
+    {
+        if (_showRoutine != null) StopCoroutine(_showRoutine);
+        if (_delayRoutine != null) StopCoroutine(_delayRoutine);
+
+        SetActiveSafe(_darkOverlay, false);
+        SetAlphaAndActive(_niceTryCg, _niceTryImage, 0f, false);
+        SetAlphaAndActive(_bestCg, _bestTxt.gameObject, 0f, false);
+        SetAlphaAndActive(_scoreCg, _scoreTxt.gameObject, 0f, false);
+        SetAlphaAndActive(_retryCg, _retryButton, 0f, false);
+        SetAlphaAndActive(_continueCg, _contiuneButton, 0f, false);
+
+        SetActiveSafe(_bg, true);
+        SetActiveSafe(_gameScoreTxt, true);
+    }
 }
