@@ -4,27 +4,21 @@ using UnityEngine;
 
 public class PlayerMover : MonoBehaviour
 {
-    //movement
     public float moveSpeed = 5f;
     private float _ballRadius;
-    
-    //input states
+
     private bool _isHolding = false;
     private bool _wasHolding = false;
     private bool _canMove = true;
 
-    // References
     [SerializeField] private RandomDirectionManager _randomDirectionManager;
     private SpeedBoostController _speedBoostController;
 
     private void Start()
     {
-        _speedBoostController= GetComponent<SpeedBoostController>();
-        
+        _speedBoostController = GetComponent<SpeedBoostController>();
         _ballRadius = GetComponent<SphereCollider>().bounds.extents.x;
-
     }
-
 
     private void Update()
     {
@@ -32,10 +26,12 @@ public class PlayerMover : MonoBehaviour
         HandleInput();
         CheckHoldState();
     }
+
     private void HandleInput()
     {
         _isHolding = Input.GetMouseButton(0) || (Input.touchCount > 0);
     }
+
     private void CheckHoldState()
     {
         if (_isHolding && !_wasHolding)
@@ -58,28 +54,26 @@ public class PlayerMover : MonoBehaviour
 
         _wasHolding = _isHolding;
     }
+
     private void Move()
     {
-        if (_randomDirectionManager == null) 
+        if (_randomDirectionManager == null)
         {
             Debug.LogWarning("RandomDirectionManager null");
             return;
         }
-        Vector3 currentDirection=_randomDirectionManager.GetCurrentDirection();
-
+        Vector3 currentDirection = _randomDirectionManager.GetCurrentDirection();
         transform.position += currentDirection * moveSpeed * Time.deltaTime;
-
         RotateBall(currentDirection);
     }
+
     private void RotateBall(Vector3 direction)
     {
-
         float angle = (moveSpeed / _ballRadius) * Mathf.Rad2Deg * Time.deltaTime;
-
         Vector3 rotationAxis = Vector3.Cross(Vector3.up, direction);
-
         transform.Rotate(rotationAxis, angle, Space.World);
     }
+
     public void StopMovementFromManager()
     {
         _canMove = false;
@@ -89,10 +83,9 @@ public class PlayerMover : MonoBehaviour
         if (_speedBoostController != null)
             _speedBoostController.ResetPlayerSpeed();
     }
+
     public void ResumeMovementFromManager()
     {
         _canMove = true;
     }
-
 }
-

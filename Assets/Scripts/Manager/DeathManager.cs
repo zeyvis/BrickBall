@@ -11,7 +11,6 @@ public class DeathManager : MonoBehaviour
 
     private void Awake()
     {
-
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -20,9 +19,9 @@ public class DeathManager : MonoBehaviour
             _playerDeathEffect = player.GetComponent<PlayerDeathEffect>();
         }
 
-        _gameOverPanel=GetComponent<GameOverPanel>();
-        _scoreManager= GetComponent<ScoreManager>();
-        _zombieManager = GetComponent<ZombieManager>(); 
+        _gameOverPanel = GetComponent<GameOverPanel>();
+        _scoreManager = GetComponent<ScoreManager>();
+        _zombieManager = GetComponent<ZombieManager>();
     }
 
     private void OnEnable()
@@ -43,38 +42,12 @@ public class DeathManager : MonoBehaviour
         }
     }
 
-    private void HandlePlayerRevived()
-    {
-        if (_playerMover != null)
-            _playerMover.ResumeMovementFromManager();
-
-        if (_zombieManager != null)
-            _zombieManager.ResumeAllZombiesFromManager();
-
-        if (_scoreManager != null)
-            _scoreManager.ResumeScoreFromManager();
-
-        if (_gameOverPanel != null)
-            _gameOverPanel.HideGameOverPanel();
-    }
-
     private void HandlePlayerDied()
     {
-
-        if (_playerMover != null)
-            _playerMover.StopMovementFromManager();
-
-
-        if (_zombieManager != null)
-            _zombieManager.StopAllZombiesFromManager();
-
-
-        if (_playerDeathEffect != null)
-            _playerDeathEffect.PlayFromManager();
-
-
-        if (_scoreManager != null)
-            _scoreManager.StopScoreFromManager();
+        if (_playerMover != null) _playerMover.StopMovementFromManager();
+        if (_zombieManager != null) _zombieManager.StopAllZombiesFromManager();
+        if (_playerDeathEffect != null) _playerDeathEffect.PlayFromManager();
+        if (_scoreManager != null) _scoreManager.StopScoreFromManager();
 
         _scoreManager.SaveBestIfNeeded();
         int best = _scoreManager.GetBestScore();
@@ -82,8 +55,14 @@ public class DeathManager : MonoBehaviour
 
         _gameOverPanel.SetScores(current, best);
 
-        if (_gameOverPanel != null)
-            _gameOverPanel.ShowGameOverPanel();
+        if (_gameOverPanel != null) _gameOverPanel.ShowGameOverPanel();
+    }
 
+    private void HandlePlayerRevived()
+    {
+        if (_playerMover != null) _playerMover.ResumeMovementFromManager();
+        if (_zombieManager != null) _zombieManager.ResumeAllZombiesFromManager();
+        if (_scoreManager != null) _scoreManager.ResumeScoreFromManager();
+        if (_gameOverPanel != null) _gameOverPanel.HideGameOverPanel();
     }
 }

@@ -1,12 +1,12 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+
 public class GameOverPanel : MonoBehaviour
 {
     [Header("UI Objects")]
     [SerializeField] private GameObject _bg;
     [SerializeField] private GameObject _gameScoreTxt;
-
     [SerializeField] private GameObject _darkOverlay;
     [SerializeField] private GameObject _niceTryImage;
     [SerializeField] private TextMeshProUGUI _bestTxt;
@@ -46,7 +46,6 @@ public class GameOverPanel : MonoBehaviour
         _retryCg = GetOrAddCanvasGroup(_retryButton);
         _continueCg = GetOrAddCanvasGroup(_contiuneButton);
 
-        // Start hidden by default
         SetActiveSafe(_darkOverlay, false);
         SetAlphaAndActive(_niceTryCg, _niceTryImage, 0f, false);
         SetAlphaAndActive(_bestCg, _bestTxt.gameObject, 0f, false);
@@ -63,14 +62,30 @@ public class GameOverPanel : MonoBehaviour
         _delayRoutine = StartCoroutine(DelayStart());
     }
 
+    public void HideGameOverPanel()
+    {
+        if (_showRoutine != null) StopCoroutine(_showRoutine);
+        if (_delayRoutine != null) StopCoroutine(_delayRoutine);
+
+        SetActiveSafe(_darkOverlay, false);
+        SetAlphaAndActive(_niceTryCg, _niceTryImage, 0f, false);
+        SetAlphaAndActive(_bestCg, _bestTxt.gameObject, 0f, false);
+        SetAlphaAndActive(_scoreCg, _scoreTxt.gameObject, 0f, false);
+        SetAlphaAndActive(_retryCg, _retryButton, 0f, false);
+        SetAlphaAndActive(_continueCg, _contiuneButton, 0f, false);
+
+        SetActiveSafe(_bg, true);
+        SetActiveSafe(_gameScoreTxt, true);
+    }
+
     private IEnumerator DelayStart()
     {
         yield return new WaitForSecondsRealtime(_showDelay);
         StartToGameOverPanel();
     }
+
     public void StartToGameOverPanel()
     {
-        // Restart-safe
         if (_showRoutine != null)
             StopCoroutine(_showRoutine);
 
@@ -79,7 +94,6 @@ public class GameOverPanel : MonoBehaviour
 
     private IEnumerator ShowSequence()
     {
-
         SetActiveSafe(_darkOverlay, true);
         SetActiveSafe(_bg, false);
         SetActiveSafe(_gameScoreTxt, false);
@@ -90,10 +104,8 @@ public class GameOverPanel : MonoBehaviour
         SetAlphaAndActive(_retryCg, _retryButton, 0f, true);
         SetAlphaAndActive(_continueCg, _contiuneButton, 0f, true);
 
-
         float niceTryTarget = To01(_niceTryTargetAlpha);
         yield return FadeCanvasGroup(_niceTryCg, 0f, niceTryTarget, _niceTryFadeDuration);
-
 
         float bestTarget = To01(_bestTargetAlpha);
         float scoreTarget = To01(_scoreTargetAlpha);
@@ -108,7 +120,6 @@ public class GameOverPanel : MonoBehaviour
 
         if (bestRoutine != null) yield return bestRoutine;
         if (scoreRoutine != null) yield return scoreRoutine;
-
 
         float buttonsTarget = To01(_buttonsTargetAlpha);
 
@@ -142,7 +153,7 @@ public class GameOverPanel : MonoBehaviour
         float time = 0f;
         while (time < duration)
         {
-            time += Time.unscaledDeltaTime; 
+            time += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(time / duration);
             cg.alpha = Mathf.Lerp(from, to, t);
             yield return null;
@@ -187,20 +198,5 @@ public class GameOverPanel : MonoBehaviour
     {
         _bestTxt.SetText($"BEST: {best}");
         _scoreTxt.SetText($"SCORE: {score}");
-    }
-    public void HideGameOverPanel()
-    {
-        if (_showRoutine != null) StopCoroutine(_showRoutine);
-        if (_delayRoutine != null) StopCoroutine(_delayRoutine);
-
-        SetActiveSafe(_darkOverlay, false);
-        SetAlphaAndActive(_niceTryCg, _niceTryImage, 0f, false);
-        SetAlphaAndActive(_bestCg, _bestTxt.gameObject, 0f, false);
-        SetAlphaAndActive(_scoreCg, _scoreTxt.gameObject, 0f, false);
-        SetAlphaAndActive(_retryCg, _retryButton, 0f, false);
-        SetAlphaAndActive(_continueCg, _contiuneButton, 0f, false);
-
-        SetActiveSafe(_bg, true);
-        SetActiveSafe(_gameScoreTxt, true);
     }
 }

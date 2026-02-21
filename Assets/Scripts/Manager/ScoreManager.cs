@@ -13,7 +13,7 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
-        UpdateScoreText(); 
+        UpdateScoreText();
     }
 
     private void Update()
@@ -21,36 +21,41 @@ public class ScoreManager : MonoBehaviour
         if (!_gameStarted || _playerDied)
             return;
 
-
         _timer += Time.deltaTime;
-       
+
         if (_timer >= 1f)
         {
-            _timer -= 1f;   
+            _timer -= 1f;
             _score++;
             UpdateScoreText();
         }
     }
+
     public void StartScore()
     {
         _gameStarted = true;
     }
+
     private void UpdateScoreText()
     {
         _scoreTxt.SetText(_score.ToString());
     }
+
     public void StopScoreFromManager()
     {
-        _playerDied= true;
+        _playerDied = true;
     }
+
     public void ResumeScoreFromManager()
     {
         _playerDied = false;
     }
+
     public int GetBestScore()
     {
         return PlayerPrefs.GetInt("BEST_SCORE", 0);
     }
+
     public void SaveBestIfNeeded()
     {
         int best = GetBestScore();

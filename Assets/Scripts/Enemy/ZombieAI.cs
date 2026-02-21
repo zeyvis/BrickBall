@@ -15,8 +15,9 @@ public class ZombieAI : MonoBehaviour
     {
         _zombieManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<ZombieManager>();
         _movement = GetComponent<ZombieMovement>();
-        _animator= GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
     }
+
     private void Update()
     {
         if (_playerCurrentPos != null)
@@ -35,10 +36,8 @@ public class ZombieAI : MonoBehaviour
     {
         if (other.TryGetComponent<IKillable>(out var killable))
         {
-            
             killable.Kill();
         }
-            
     }
 
     private void FindPlayerLocation()
@@ -48,6 +47,7 @@ public class ZombieAI : MonoBehaviour
         if (_playerCurrentPos == null)
             Debug.LogWarning("Player dont find");
     }
+
     public void StopZombie()
     {
         if (_movement != null)
@@ -55,9 +55,8 @@ public class ZombieAI : MonoBehaviour
             _movement.enabled = false;
             _animator.enabled = false;
         }
-
-            
     }
+
     public void ResumeZombie()
     {
         if (_movement != null)

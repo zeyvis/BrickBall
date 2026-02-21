@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class ZombieManager : MonoBehaviour
 {
-    
     private readonly List<ZombieAI> _activeZombies = new();
-   
-   
+
     public void RegisterZombie(ZombieAI zombie)
     {
         if (!_activeZombies.Contains(zombie))
@@ -19,6 +17,7 @@ public class ZombieManager : MonoBehaviour
         if (_activeZombies.Contains(zombie))
             _activeZombies.Remove(zombie);
     }
+
     public void StopAllZombiesFromManager()
     {
         for (int i = _activeZombies.Count - 1; i >= 0; i--)
@@ -28,6 +27,7 @@ public class ZombieManager : MonoBehaviour
                 zombie.StopZombie();
         }
     }
+
     public void ResumeAllZombiesFromManager()
     {
         for (int i = _activeZombies.Count - 1; i >= 0; i--)
@@ -37,5 +37,4 @@ public class ZombieManager : MonoBehaviour
                 zombie.ResumeZombie();
         }
     }
-
 }

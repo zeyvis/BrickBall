@@ -11,20 +11,27 @@ public class PlayerDeathEffect : MonoBehaviour
     private Material _mat;
     private Color _startColor;
 
-
     private void Start()
     {
-
-
         _mat = _renderer.material;
         _startColor = _mat.color;
-
     }
+
     public void PlayFromManager()
     {
         ParticleEffect();
         StartCoroutine(FadeOut());
     }
+
+    public void RestorePlayer()
+    {
+        StopAllCoroutines();
+        if (_mat != null)
+        {
+            _mat.color = _startColor;
+        }
+    }
+
     private IEnumerator FadeOut()
     {
         float time = 0f;
@@ -45,6 +52,7 @@ public class PlayerDeathEffect : MonoBehaviour
         finalColor.a = 0f;
         _mat.color = finalColor;
     }
+
     private void ParticleEffect()
     {
         if (_deathParticle == null) return;
@@ -54,13 +62,4 @@ public class PlayerDeathEffect : MonoBehaviour
 
         _deathParticle.Play();
     }
-    public void RestorePlayer()
-    {
-        StopAllCoroutines();
-        if (_mat != null)
-        {
-            _mat.color = _startColor;
-        }
-    }
-
 }

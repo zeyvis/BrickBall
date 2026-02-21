@@ -3,11 +3,10 @@ using UnityEngine;
 public class ContinueButton : MonoBehaviour
 {
     [SerializeField] private float _spawnHeightOffset = 2f;
-    [SerializeField] private GameOverPanel _gameOverPanel;
+
     private Transform _player;
     private Transform _platformContainer;
     private GameObject _lastContactObject;
-   
 
     private void Start()
     {
@@ -51,6 +50,7 @@ public class ContinueButton : MonoBehaviour
                 killableTarget.Kill();
             }
             _lastContactObject = null;
+
             RestoreGameState();
             return;
         }
@@ -81,6 +81,19 @@ public class ContinueButton : MonoBehaviour
         RestoreGameState();
     }
 
+    private void RestoreGameState()
+    {
+        if (_player != null && _player.TryGetComponent<PlayerDeathEffect>(out var deathEffect))
+        {
+            deathEffect.RestorePlayer();
+        }
+
+        if (_player != null && _player.TryGetComponent<PlayerHealth>(out var health))
+        {
+            health.Revive();
+        }
+    }
+
     private Vector3 GetSafePosition()
     {
         foreach (Transform child in _platformContainer)
@@ -97,17 +110,5 @@ public class ContinueButton : MonoBehaviour
         }
 
         return Vector3.zero + (Vector3.up * _spawnHeightOffset);
-    }
-    private void RestoreGameState()
-    {
-        if (_player != null && _player.TryGetComponent<PlayerDeathEffect>(out var deathEffect))
-        {
-            deathEffect.RestorePlayer();
-        }
-
-        if (_player != null && _player.TryGetComponent<PlayerHealth>(out var health))
-        {
-            health.Revive();
-        }
     }
 }
