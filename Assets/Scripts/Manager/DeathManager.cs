@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DeathManager : MonoBehaviour
 {
-    [SerializeField] GameOverPanel _gameOverPanel;
+    private GameOverPanel _gameOverPanel;
     private PlayerHealth _playerHealth;
     private PlayerMover _playerMover;
     private PlayerDeathEffect _playerDeathEffect;

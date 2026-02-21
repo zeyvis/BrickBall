@@ -4,7 +4,9 @@ using TMPro;
 public class ScoreManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _scoreTxt;
+
     private bool _playerDied = false;
+    private bool _gameStarted = false;
     private int _score = 0;
     private float _timer = 0f;
     public int CurrentScore => _score;
@@ -16,7 +18,7 @@ public class ScoreManager : MonoBehaviour
 
     private void Update()
     {
-        if (_playerDied)
+        if (!_gameStarted || _playerDied)
             return;
 
 
@@ -29,7 +31,10 @@ public class ScoreManager : MonoBehaviour
             UpdateScoreText();
         }
     }
-
+    public void StartScore()
+    {
+        _gameStarted = true;
+    }
     private void UpdateScoreText()
     {
         _scoreTxt.SetText(_score.ToString());
