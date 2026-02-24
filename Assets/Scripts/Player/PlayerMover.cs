@@ -13,7 +13,7 @@ public class PlayerMover : MonoBehaviour
 
     [SerializeField] private RandomDirectionManager _randomDirectionManager;
     private SpeedBoostController _speedBoostController;
-
+    public bool IsMoving => _canMove && _isHolding;
     private void Start()
     {
         _speedBoostController = GetComponent<SpeedBoostController>();
