@@ -7,23 +7,51 @@ public class PhaseManager : MonoBehaviour
     private Transform _targetContainer;
 
     [SerializeField] private ZombiePool _zombiePool;
+    [SerializeField] private HazardPool _hazardPool;
+
+    private Coroutine _gameLoopCoroutine;//test için
     private void Start()
     {
 
         if (_zombiePool != null)
             _zombiePool.InitializePool();
         else
-            Debug.LogError("ZombiePool atanmadý!");
-        StartCoroutine(GameLoop());
+            Debug.LogError("PhaseManager:ZombiePool not found");
+
+        if (_hazardPool != null) _hazardPool.InitializePool();
+        else Debug.LogError("PhaseManager:HazardPool not found");
+
+        _gameLoopCoroutine = StartCoroutine(GameLoop());//test için
+        //StartCoroutine(GameLoop());
     }
 
     private void Update()
     {
         if (_currentPhase != null) _currentPhase.Update();
 
-       
-    }
 
+
+        // T tuþuna basýnca istediðin fazý oynat
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log("TEST:  selected phase started");
+            StopNormalLoop();
+            SwitchPhase(new HazardDropPhase(_targetContainer, _hazardPool));
+        }
+
+       
+
+    }
+    // Test için
+    private void StopNormalLoop()
+    {
+        if (_gameLoopCoroutine != null)
+        {
+            StopCoroutine(_gameLoopCoroutine);
+            _gameLoopCoroutine = null;
+            Debug.Log("Automatic game loop has been stopped for testing");
+        }
+    }
     private IEnumerator GameLoop()
     {
         while (_targetContainer == null)
@@ -65,10 +93,16 @@ public class PhaseManager : MonoBehaviour
             Debug.Log("drop phase ");
             SwitchPhase(new DropPhase(_targetContainer));
         }
-        else
+        else if(Random.value<0.75f)
         {
             Debug.Log("zombie phase");
             SwitchPhase(new ZombiePhase(_zombiePool, _targetContainer));
+        }
+        else
+        {
+            Debug.Log("hazard drop phase");
+
+            SwitchPhase(new HazardDropPhase(_targetContainer, _hazardPool));
         }
     }
 

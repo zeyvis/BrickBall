@@ -13,6 +13,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+       
         if (other.TryGetComponent<IKillable>(out var killable) && _speedBoostController.playerBeastMode)
         {
 
