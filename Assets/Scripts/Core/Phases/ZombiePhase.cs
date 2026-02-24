@@ -4,8 +4,8 @@ public class ZombiePhase : IGamePhase
 {
     private ZombiePool _pool;
     private Transform _spawnPoint; 
-    private GameObject _currentZombie; 
-
+    private GameObject _currentZombie;
+    public float Duration => 20f;
     public ZombiePhase(ZombiePool pool, Transform spawnPoint)
     {
         _pool = pool;

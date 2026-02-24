@@ -7,10 +7,10 @@ public class DropPhase : IGamePhase
     private float _timer;
     private float _selectionInterval = 0.5f;
     private float _timeActive = 0f;
-    private float _spawnDurationLimit = 4.0f;
+    private float _spawnDurationLimit = 2.5f;
 
     private List<FallingCube> _activeCubes = new List<FallingCube>();
-
+    public float Duration => 8f;
     public DropPhase(Transform container)
     {
         _container = container;

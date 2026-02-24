@@ -8,7 +8,7 @@ public class TiltPhase : IGamePhase
     private float _smoothSpeed = 2.0f;
 
     private MonoBehaviour _coroutineRunner;
-
+    public float Duration => 5f;
 
     public TiltPhase(Transform transformObj, MonoBehaviour runner)
     {
@@ -56,7 +56,7 @@ public class TiltPhase : IGamePhase
 
     private void SetNewTarget()
     {
-        float randomX = Random.Range(-30f, 30f);
+        float randomX = Random.Range(-12f, 12f);
         _targetRotation = Quaternion.Euler(randomX, 0, 0);
     }
 

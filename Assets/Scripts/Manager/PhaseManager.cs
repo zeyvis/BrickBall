@@ -38,13 +38,15 @@ public class PhaseManager : MonoBehaviour
 
         while (true)
         {
-
+            
             PickAndStartRandomPhase();
 
-            yield return new WaitForSeconds(8f);
+            
+            float waitTime = _currentPhase.Duration;
+            yield return new WaitForSeconds(waitTime);
 
             Debug.Log("time up reseting");
-            SwitchPhase(null); 
+            SwitchPhase(null);
 
             // faz molasý 
             yield return new WaitForSeconds(4f);
