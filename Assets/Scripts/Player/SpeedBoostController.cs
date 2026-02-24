@@ -5,17 +5,25 @@ using UnityEngine;
 public class SpeedBoostController : MonoBehaviour
 {
     [Header("Trail Time Settings")]
-    [SerializeField] private float _speedLimitStart = 15f;  
     [SerializeField] private float _speedLimitYellow = 20f; 
-    [SerializeField] private float _speedLimitRed = 25f;    
+    [SerializeField] private float _speedLimitRed = 25f;
 
-    [Header("Trail Colors")]
-    [SerializeField] private Color _yellowColor = new Color(1f, 0.92f, 0.016f, 0.5f);
-    [SerializeField] private Color _redColor = new Color(1f, 0.2f, 0.2f, 0.75f);
+    [Header("VFX Trail References")]
+    [SerializeField] private TrailRenderer _distortionTrail;
+    [SerializeField] private TrailRenderer _trail02;
+    [SerializeField] private TrailRenderer _trail01;
 
-    
-    [SerializeField] private float _speedMutltipler = 1.2f;
-    private TrailRenderer _trail;
+    [Header("Speed Settings")]
+    [SerializeField] private float _baseSpeedMultiplier = 2f; 
+    [SerializeField] private float _multiplierIncreaseRate = 5f; 
+    [SerializeField] private float _maxSpeedMultiplier = 25f; 
+    [SerializeField] private float _maxSpeed = 40f; 
+
+    [Header("VFX Settings")]
+    [SerializeField] private ParticleSystem _speedLinesParticle;
+
+    private float _currentSpeedMultiplier; 
+
     private PlayerMover _playerMover;
     private float _baseSpeed;
     private bool _beastMode = false;
@@ -25,69 +33,94 @@ public class SpeedBoostController : MonoBehaviour
     {
         _playerMover = GetComponent<PlayerMover>();
         _baseSpeed = _playerMover.moveSpeed;
-        _trail = GetComponent<TrailRenderer>();
+       
 
-        UpdateTrailColor();
-    }
+        _currentSpeedMultiplier = _baseSpeedMultiplier; 
 
-    public void UpdatePlayerSpeed()
-    {
-        float calculatedSpeed = _playerMover.moveSpeed + _speedMutltipler;
-        _playerMover.moveSpeed = calculatedSpeed;
-        UpdateTrailColor();
-        UpdatePlayerMode();
+        UpdateVFXState();
     }
 
     public void ResetPlayerSpeed()
     {
         _playerMover.moveSpeed = _baseSpeed;
-        UpdateTrailColor();
-        UpdatePlayerMode();
+        _currentSpeedMultiplier = _baseSpeedMultiplier;
+        UpdateVFXState();
     }
 
-    private void UpdateTrailColor()
+    public void UpdatePlayerSpeed()
     {
-        if (_trail == null) return;
+       
+        _currentSpeedMultiplier += _multiplierIncreaseRate * Time.deltaTime;
 
-        float currentSpeed = _playerMover.moveSpeed;
+      
+        _currentSpeedMultiplier = Mathf.Min(_currentSpeedMultiplier, _maxSpeedMultiplier);
 
+      
+        float calculatedSpeed = _playerMover.moveSpeed + (_currentSpeedMultiplier * Time.deltaTime);
+        _playerMover.moveSpeed = Mathf.Clamp(calculatedSpeed, _baseSpeed, _maxSpeed);
 
-        if (currentSpeed < _speedLimitStart)
-        {
-            _trail.emitting = false;
-            return;
-        }
-
-        _trail.emitting = true;
-        Color targetColor;
-
-
-        if (currentSpeed <= _speedLimitYellow)
-        {
-            targetColor = _yellowColor;
-        }
-        else if (currentSpeed <= _speedLimitRed)
-        {
-            float t = Mathf.InverseLerp(_speedLimitYellow, _speedLimitRed, currentSpeed);
-            targetColor = Color.Lerp(_yellowColor, _redColor, t);
-        }
-
-        else
-        {
-            targetColor = _redColor;
-        }
-
-        _trail.startColor = targetColor;
-        _trail.endColor = new Color(targetColor.r, targetColor.g, targetColor.b, 0f);
+        UpdateVFXState();
     }
 
-    private void UpdatePlayerMode()
+    private void UpdateVFXState()
     {
         float currentSpeed = _playerMover.moveSpeed;
-        if(currentSpeed>_speedLimitRed)
-            _beastMode= true;
-        else
-            _beastMode= false;
-        
+
+       
+        if (currentSpeed < _speedLimitYellow)
+        {
+            SetTrailState(_distortionTrail, false);
+            SetTrailState(_trail02, false);
+            SetTrailState(_trail01, false);
+            SetParticleState(_speedLinesParticle, false); 
+
+            _beastMode = false;
+        }
+
+        else if (currentSpeed >= _speedLimitYellow && currentSpeed < _speedLimitRed)
+        {
+            SetTrailState(_distortionTrail, true);
+            SetTrailState(_trail02, true);
+            SetTrailState(_trail01, false);
+            SetParticleState(_speedLinesParticle, false); 
+
+            _beastMode = false;
+        }
+
+        else if (currentSpeed >= _speedLimitRed)
+        {
+            SetTrailState(_distortionTrail, true);
+            SetTrailState(_trail02, true);
+            SetTrailState(_trail01, true);
+            SetParticleState(_speedLinesParticle, true); 
+
+            _beastMode = true;
+        }
     }
+
+    private void SetTrailState(TrailRenderer trail, bool isEmitting)
+    {
+        if (trail == null) return;
+
+
+        if (trail.emitting != isEmitting)
+        {
+            trail.emitting = isEmitting;
+        }
+    }
+    private void SetParticleState(ParticleSystem ps, bool shouldPlay)
+    {
+        if (ps == null) return;
+
+
+        if (shouldPlay && !ps.isEmitting)
+        {
+            ps.Play();
+        }
+        else if (!shouldPlay && ps.isEmitting)
+        {
+            ps.Stop();
+        }
+    }
+
 }
