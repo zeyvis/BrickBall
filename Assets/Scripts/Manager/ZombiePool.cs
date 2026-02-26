@@ -25,7 +25,7 @@ public class ZombiePool : MonoBehaviour
     {
         if (_zombiePrefab == null)
         {
-            Debug.LogError("Zombie Prefab atanmamýþ!");
+            Debug.LogError("Zombie Prefab not found");
             return;
         }
 

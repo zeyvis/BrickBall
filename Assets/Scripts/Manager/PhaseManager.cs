@@ -36,7 +36,7 @@ public class PhaseManager : MonoBehaviour
         {
             Debug.Log("TEST:  selected phase started");
             StopNormalLoop();
-            SwitchPhase(new HazardDropPhase(_targetContainer, _hazardPool));
+            SwitchPhase(new ZombiePhase(_zombiePool, _targetContainer));
         }
 
        
