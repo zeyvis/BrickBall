@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class HazardMovement : MonoBehaviour
 {
-    [SerializeField]private float _fallSpeed = 5f;
+    [SerializeField]private float _fallSpeed = 35f;
     private bool _iscontactPlatform = false;
     
     void Update()
     {
         if (!_iscontactPlatform)
-        transform.Translate(Vector3.down * _fallSpeed * Time.deltaTime, Space.World);
+            transform.Translate(Vector3.down * _fallSpeed * Time.deltaTime, Space.World);       
     }
 
     private void OnTriggerEnter(Collider other)
@@ -18,8 +18,10 @@ public class HazardMovement : MonoBehaviour
             _iscontactPlatform = true;
         }
     }
+
     private void OnDisable()
     {
         _iscontactPlatform= false;
     }
+    
 }

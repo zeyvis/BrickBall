@@ -8,6 +8,11 @@ public class PhaseManager : MonoBehaviour
 
     [SerializeField] private ZombiePool _zombiePool;
     [SerializeField] private HazardPool _hazardPool;
+    [SerializeField] private GhostPool _ghostPool;
+    [SerializeField] private DirectionalCameraController _camController;
+    [SerializeField] private PhaseSoundManager _phaseSoundManager;
+
+    [SerializeField] private SkyboxColorTransitioner _skyboxTransitioner;
 
     private Coroutine _gameLoopCoroutine;//test için
     private void Start()
@@ -21,6 +26,8 @@ public class PhaseManager : MonoBehaviour
         if (_hazardPool != null) _hazardPool.InitializePool();
         else Debug.LogError("PhaseManager:HazardPool not found");
 
+        if (_ghostPool != null) _ghostPool.InitializePool();
+
         _gameLoopCoroutine = StartCoroutine(GameLoop());//test için
         //StartCoroutine(GameLoop());
     }
@@ -31,15 +38,14 @@ public class PhaseManager : MonoBehaviour
 
 
 
-        // T tuþuna basýnca istediðin fazý oynat
         if (Input.GetKeyDown(KeyCode.F))
         {
-            Debug.Log("TEST:  selected phase started");
+            Debug.Log("TEST: Ghost Phase started");
             StopNormalLoop();
-            SwitchPhase(new ZombiePhase(_zombiePool, _targetContainer));
+            SwitchPhase(new ZombiePhase(_zombiePool, _targetContainer, _skyboxTransitioner));
         }
 
-       
+
 
     }
     // Test için
@@ -83,26 +89,32 @@ public class PhaseManager : MonoBehaviour
 
     private void PickAndStartRandomPhase()
     {
-        if (Random.value < 0.33f)
+        float roll = Random.value;
+        if (roll < 0.20f)
         {
             Debug.Log("tilt phase ");
-            SwitchPhase(new TiltPhase(_targetContainer, this));
+            SwitchPhase(new TiltPhase(_targetContainer, this,_skyboxTransitioner));
         }
-        else if(Random.value<0.66f)
+        else if (roll < 0.40f) 
         {
             Debug.Log("drop phase ");
-            SwitchPhase(new DropPhase(_targetContainer));
+            SwitchPhase(new DropPhase(_targetContainer, _skyboxTransitioner));
         }
-        else if(Random.value<0.75f)
+        else if(roll <0.60f)
         {
             Debug.Log("zombie phase");
-            SwitchPhase(new ZombiePhase(_zombiePool, _targetContainer));
+            SwitchPhase(new ZombiePhase(_zombiePool, _targetContainer, _skyboxTransitioner));
         }
-        else
+        else if(roll < 0.80f)
         {
             Debug.Log("hazard drop phase");
 
-            SwitchPhase(new HazardDropPhase(_targetContainer, _hazardPool));
+            SwitchPhase(new HazardDropPhase(_targetContainer, _hazardPool,_camController,_phaseSoundManager, _skyboxTransitioner));
+        }
+        else 
+        {
+            Debug.Log("ghost phase");
+            SwitchPhase(new GhostPhase(_ghostPool, _targetContainer, _skyboxTransitioner));
         }
     }
 

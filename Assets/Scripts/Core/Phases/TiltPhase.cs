@@ -8,12 +8,22 @@ public class TiltPhase : IGamePhase
     private float _smoothSpeed = 2.0f;
 
     private MonoBehaviour _coroutineRunner;
-    public float Duration => 5f;
+    public float Duration => 15f;
+    private const float kRetargetInterval = 4f; 
+    private float _retargetTimer;
 
-    public TiltPhase(Transform transformObj, MonoBehaviour runner)
+
+    private readonly SkyboxColorTransitioner _skybox;
+
+
+ 
+
+
+    public TiltPhase(Transform transformObj, MonoBehaviour runner, SkyboxColorTransitioner skybox)
     {
         _transformToRotate = transformObj;
-        _coroutineRunner = runner; 
+        _coroutineRunner = runner;
+        _skybox = skybox;
 
         if (_transformToRotate != null)
         {
@@ -23,19 +33,29 @@ public class TiltPhase : IGamePhase
 
     public void Enter()
     {
+        _skybox.TransitionToHex("#B91C1C", 2f);
+        _retargetTimer = 0f;
         Debug.Log("Tilt phase  started.");
         SetNewTarget();
     }
 
     public void Update()
     {
+        
+
         if (_transformToRotate == null) return;
 
         if (Input.GetKeyDown(KeyCode.D))
         {
             SetNewTarget();
         }
+        _retargetTimer += Time.deltaTime;
 
+        if (_retargetTimer >= kRetargetInterval)
+        {
+            _retargetTimer -= kRetargetInterval;
+            SetNewTarget();
+        }
         _transformToRotate.localRotation = Quaternion.Slerp(
             _transformToRotate.localRotation,
             _targetRotation,
@@ -46,7 +66,7 @@ public class TiltPhase : IGamePhase
     public void Exit()
     {
         Debug.Log("Tilt phase finished");
-
+        _skybox.TransitionToHex("#1E40AF", 1.5f);
 
         if (_coroutineRunner != null && _transformToRotate != null)
         {

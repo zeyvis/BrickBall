@@ -34,6 +34,7 @@ public class PlayerMover : MonoBehaviour
 
     private void CheckHoldState()
     {
+        Debug.Log("checkholdatse");
         if (_isHolding && !_wasHolding)
         {
             Debug.Log("Basýlý tutma baþladý");

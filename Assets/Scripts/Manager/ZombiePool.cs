@@ -42,6 +42,11 @@ public class ZombiePool : MonoBehaviour
         }
 
         GameObject zombie = _poolQueue.Dequeue();
+        ZombieHealth health = zombie.GetComponent<ZombieHealth>();
+        if (health != null)
+        {
+            health.Initialize(this); 
+        }
         zombie.SetActive(true);
         return zombie;
     }

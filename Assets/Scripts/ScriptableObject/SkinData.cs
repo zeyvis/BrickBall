@@ -5,4 +5,5 @@ public class SkinData : ScriptableObject
 {
     public string skinName;
     public Texture2D skinTexture;
+    public GameObject vfxTrailPrefab;
 }

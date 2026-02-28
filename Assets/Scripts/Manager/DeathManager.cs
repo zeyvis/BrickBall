@@ -6,7 +6,7 @@ public class DeathManager : MonoBehaviour
     private PlayerHealth _playerHealth;
     private PlayerMover _playerMover;
     private PlayerDeathEffect _playerDeathEffect;
-    private ZombieManager _zombieManager;
+    private EnemyManager _enemyManager;
     private ScoreManager _scoreManager;
 
     private void Awake()
@@ -21,7 +21,7 @@ public class DeathManager : MonoBehaviour
 
         _gameOverPanel = GetComponent<GameOverPanel>();
         _scoreManager = GetComponent<ScoreManager>();
-        _zombieManager = GetComponent<ZombieManager>();
+        _enemyManager = GetComponent<EnemyManager>();
     }
 
     private void OnEnable()
@@ -45,7 +45,7 @@ public class DeathManager : MonoBehaviour
     private void HandlePlayerDied()
     {
         if (_playerMover != null) _playerMover.StopMovementFromManager();
-        if (_zombieManager != null) _zombieManager.StopAllZombiesFromManager();
+        if (_enemyManager != null) _enemyManager.StopAllEntities();
         if (_playerDeathEffect != null) _playerDeathEffect.PlayFromManager();
         if (_scoreManager != null) _scoreManager.StopScoreFromManager();
 
@@ -61,7 +61,7 @@ public class DeathManager : MonoBehaviour
     private void HandlePlayerRevived()
     {
         if (_playerMover != null) _playerMover.ResumeMovementFromManager();
-        if (_zombieManager != null) _zombieManager.ResumeAllZombiesFromManager();
+        if (_enemyManager != null) _enemyManager.ResumeAllEntities();
         if (_scoreManager != null) _scoreManager.ResumeScoreFromManager();
         if (_gameOverPanel != null) _gameOverPanel.HideGameOverPanel();
     }

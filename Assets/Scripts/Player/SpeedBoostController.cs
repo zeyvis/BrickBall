@@ -8,10 +8,8 @@ public class SpeedBoostController : MonoBehaviour
     [SerializeField] private float _speedLimitYellow = 20f; 
     [SerializeField] private float _speedLimitRed = 25f;
 
-    [Header("VFX Trail References")]
-    [SerializeField] private TrailRenderer _distortionTrail;
-    [SerializeField] private TrailRenderer _trail02;
-    [SerializeField] private TrailRenderer _trail01;
+
+
 
     [Header("Speed Settings")]
     [SerializeField] private float _baseSpeedMultiplier = 2f; 
@@ -22,6 +20,10 @@ public class SpeedBoostController : MonoBehaviour
     [Header("VFX Settings")]
     [SerializeField] private ParticleSystem _speedLinesParticle;
 
+    private TrailRenderer _distortionTrail;
+    private TrailRenderer _trail02;
+    private TrailRenderer _trail01;
+
     private float _currentSpeedMultiplier; 
 
     private PlayerMover _playerMover;
@@ -29,13 +31,17 @@ public class SpeedBoostController : MonoBehaviour
     private bool _beastMode = false;
     public bool playerBeastMode=> _beastMode;
 
-    private void Start()
+    private void Awake()
     {
         _playerMover = GetComponent<PlayerMover>();
         _baseSpeed = _playerMover.moveSpeed;
-       
 
-        _currentSpeedMultiplier = _baseSpeedMultiplier; 
+
+        _currentSpeedMultiplier = _baseSpeedMultiplier;
+    }
+    private void Start()
+    {
+       
 
         UpdateVFXState();
     }
@@ -61,37 +67,44 @@ public class SpeedBoostController : MonoBehaviour
 
         UpdateVFXState();
     }
+    public void SetNewVFX(SkinVFXBundle newVFXBundle)
+    {
+        _distortionTrail = newVFXBundle.distortionTrail;
+        _trail01 = newVFXBundle.trail01;
+        _trail02 = newVFXBundle.trail02;
 
+        UpdateVFXState();
+    }
     private void UpdateVFXState()
     {
         float currentSpeed = _playerMover.moveSpeed;
 
-       
         if (currentSpeed < _speedLimitYellow)
         {
             SetTrailState(_distortionTrail, false);
-            SetTrailState(_trail02, false);
             SetTrailState(_trail01, false);
+            SetTrailState(_trail02, false);
+
             SetParticleState(_speedLinesParticle, false); 
 
             _beastMode = false;
         }
-
         else if (currentSpeed >= _speedLimitYellow && currentSpeed < _speedLimitRed)
         {
             SetTrailState(_distortionTrail, true);
-            SetTrailState(_trail02, true);
             SetTrailState(_trail01, false);
+            SetTrailState(_trail02, false);
+
             SetParticleState(_speedLinesParticle, false); 
 
             _beastMode = false;
         }
-
         else if (currentSpeed >= _speedLimitRed)
         {
             SetTrailState(_distortionTrail, true);
-            SetTrailState(_trail02, true);
             SetTrailState(_trail01, true);
+            SetTrailState(_trail02, true);
+
             SetParticleState(_speedLinesParticle, true); 
 
             _beastMode = true;
@@ -100,14 +113,15 @@ public class SpeedBoostController : MonoBehaviour
 
     private void SetTrailState(TrailRenderer trail, bool isEmitting)
     {
+       
         if (trail == null) return;
-
 
         if (trail.emitting != isEmitting)
         {
             trail.emitting = isEmitting;
         }
     }
+  
     private void SetParticleState(ParticleSystem ps, bool shouldPlay)
     {
         if (ps == null) return;

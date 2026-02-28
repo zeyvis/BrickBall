@@ -14,7 +14,8 @@ public class DirectionalCameraController : MonoBehaviour
     [SerializeField] private float _lookAheadDistance = 3f;
     [SerializeField] private float _followSmoothness = 8f;
 
-    private Vector3 _currentVelocity;
+    private float _shakeTimer;
+    private float _shakeMagnitude;
 
     private void LateUpdate()
     {
@@ -22,9 +23,7 @@ public class DirectionalCameraController : MonoBehaviour
             return;
 
         Vector3 baseTargetPosition = _target.position;
-
         Vector3 currentDirection = _directionManager.GetCurrentDirection();
-
 
         if (currentDirection != Vector3.zero)
         {
@@ -34,12 +33,25 @@ public class DirectionalCameraController : MonoBehaviour
         Quaternion targetRotation = Quaternion.Euler(_angle);
         Vector3 desiredPosition = baseTargetPosition + targetRotation * Vector3.back * _distance;
 
-        transform.position = Vector3.Lerp(
+        Vector3 smoothedPosition = Vector3.Lerp(
             transform.position,
             desiredPosition,
             _followSmoothness * Time.deltaTime
         );
 
+        if (_shakeTimer > 0)
+        {
+            smoothedPosition += Random.insideUnitSphere * _shakeMagnitude;
+            _shakeTimer -= Time.deltaTime;
+        }
+
+        transform.position = smoothedPosition;
         transform.rotation = targetRotation;
+    }
+
+    public void ShakeCamera(float duration = 1f, float magnitude = 0.5f)
+    {
+        _shakeTimer = duration;
+        _shakeMagnitude = magnitude;
     }
 }
