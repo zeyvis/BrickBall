@@ -13,6 +13,11 @@ public class PlayerMover : MonoBehaviour
 
     [SerializeField] private RandomDirectionManager _randomDirectionManager;
     private SpeedBoostController _speedBoostController;
+
+    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private float _groundCheckDistance = 0.1f;
+    private bool _isGrounded;
+    private float _airborneTimer = 0f;
     public bool IsMoving => _canMove && _isHolding;
     private void Start()
     {
@@ -23,6 +28,8 @@ public class PlayerMover : MonoBehaviour
     private void Update()
     {
         if (!_canMove) return;
+
+        CheckGroundedState();
         HandleInput();
         CheckHoldState();
     }
@@ -34,7 +41,7 @@ public class PlayerMover : MonoBehaviour
 
     private void CheckHoldState()
     {
-        Debug.Log("checkholdatse");
+
         if (_isHolding && !_wasHolding)
         {
             Debug.Log("Basýlý tutma baþladý");
@@ -55,14 +62,24 @@ public class PlayerMover : MonoBehaviour
 
         _wasHolding = _isHolding;
     }
+    private void CheckGroundedState()
+    {
+        _isGrounded = Physics.CheckSphere(
+            transform.position - new Vector3(0, _ballRadius, 0),
+            _ballRadius * 0.9f,
+            _groundLayer
+        );
 
+        if (_isGrounded)
+            _airborneTimer = 0f;
+        else
+            _airborneTimer += Time.deltaTime;
+    }
     private void Move()
     {
-        if (_randomDirectionManager == null)
-        {
-            Debug.LogWarning("RandomDirectionManager null");
-            return;
-        }
+        if (_randomDirectionManager == null) return;
+        if (!_isGrounded && _airborneTimer > 0.17f) return;
+
         Vector3 currentDirection = _randomDirectionManager.GetCurrentDirection();
         transform.position += currentDirection * moveSpeed * Time.deltaTime;
         RotateBall(currentDirection);
