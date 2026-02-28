@@ -1,9 +1,9 @@
 using UnityEngine;
-
+using System.Collections.Generic;
 public class ZombiePhase : IGamePhase
 {
     private readonly ZombiePool _pool;
-    private readonly Transform _spawnPoint;
+    private readonly Transform _container;
 
     public float Duration => 15f; 
 
@@ -13,10 +13,10 @@ public class ZombiePhase : IGamePhase
     private const float kSpawnInterval = 5f;
     private float _spawnTimer;
 
-    public ZombiePhase(ZombiePool pool, Transform spawnPoint, SkyboxColorTransitioner skybox)
+    public ZombiePhase(ZombiePool pool, Transform container, SkyboxColorTransitioner skybox)
     {
         _pool = pool;
-        _spawnPoint = spawnPoint;
+        _container = container;
         _skybox = skybox;
     }
 
@@ -48,12 +48,27 @@ public class ZombiePhase : IGamePhase
 
     private void SpawnZombie()
     {
-        if (_pool == null || _spawnPoint == null) return;
+        if (_pool == null || _container == null || _container.childCount == 0) return;
+
+        List<Transform> safeCubes = new List<Transform>();
+
+        foreach (Transform child in _container)
+        {
+            if (child.GetComponent<FallingCube>() == null)
+            {
+                safeCubes.Add(child);
+            }
+        }
+
+        if (safeCubes.Count == 0) return;
+
+        int randomIndex = Random.Range(0, safeCubes.Count);
+        Transform selectedCube = safeCubes[randomIndex];
 
         GameObject zombie = _pool.GetZombie();
         if (zombie == null) return;
 
-        zombie.transform.position = _spawnPoint.position + Vector3.up * 2.0f;
+        zombie.transform.position = selectedCube.position + Vector3.up * 2.0f;
         zombie.transform.rotation = Quaternion.identity;
     }
 }

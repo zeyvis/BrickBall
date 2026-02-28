@@ -14,8 +14,7 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private RandomDirectionManager _randomDirectionManager;
     private SpeedBoostController _speedBoostController;
 
-    [SerializeField] private LayerMask _groundLayer;
-    [SerializeField] private float _groundCheckDistance = 0.1f;
+    [SerializeField] private LayerMask _groundLayer;    
     private bool _isGrounded;
     private float _airborneTimer = 0f;
     public bool IsMoving => _canMove && _isHolding;
